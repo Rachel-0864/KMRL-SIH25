@@ -101,8 +101,3 @@ scipy
 ##  Outcome
 
 The system significantly reduces manual document review time, improves accessibility to critical information, minimizes compliance risks, and enhances inter-departmental coordination within KMRL.
-
-
-
-
-Just tell me 👍
