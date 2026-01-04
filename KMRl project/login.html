@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KMRL Document Intelligence Hub - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Combined Login Page Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #007acc, #00a651);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .malayalam {
+      font-family: 'Noto Sans Malayalam', sans-serif;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .login-logo {
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+    .login-container h2 {
+      margin-bottom: 0.5rem;
+      color: #007acc;
+    }
+    .login-container p {
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+    .feedback {
+      margin-top: 1rem;
+      color: #d9534f;
+      font-weight: bold;
+    }
+    a.skip-link {
+      color: #007acc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    a.skip-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <img src="assets/logo.png" alt="KMRL Logo" class="login-logo" />
+    <h2>Login to KMRL Document Intelligence Hub</h2>
+    <p>കൊച്ചി മെട്രോ ഡോക്യുമെന്റ് ഇന്റലിജൻസ് ഹബ് - ലോഗിൻ</p>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+      </div>
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+          <option value="">Select Role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
+    <p id="loginFeedback" class="feedback"></p>
+    <a href="index.html" class="skip-link">Skip Login (Demo)</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+      const loginFeedback = document.getElementById('loginFeedback');
+
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const role = document.getElementById('role').value;
+
+        const validCredentials = {
+          user: { username: 'user', password: 'user123' },
+          admin: { username: 'admin', password: 'admin123' }
+        };
+
+        const validUser = validCredentials[role];
+
+        if (validUser && username === validUser.username && password === validUser.password && role !== '') {
+          // Save role in localStorage for later role-based UI control
+          localStorage.setItem('userRole', role);
+          // Redirect to main page
+          window.location.href = 'index1.html'; // Adjust if main page filename differs
+        } else {
+          loginFeedback.textContent = 'Invalid username or password';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KMRL Document Intelligence Hub | Kochi Metro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+    .malayalam { font-family: 'Noto Sans Malayalam', sans-serif; }
+    header { background: #007acc; color: white; }
+    .top-bar { display: flex; align-items: center; padding: 0.5rem 1rem; }
+    .logo { height: 50px; }
+    .top-bar h1 { flex: 1; text-align: center; margin: 0 1rem; }
+    .lang-selector select { padding: 0.25rem; border: none; background: white; border-radius: 4px; }
+    nav ul { display: flex; list-style: none; justify-content: center; background: #005a9e; padding: 0.5rem 0; }
+    nav li { margin: 0 1rem; }
+    nav a { color: white; text-decoration: none; padding: 0.5rem; }
+    nav a:hover { background: rgba(255,255,255,0.1); }
+    .login-btn-container {
+      margin-left: auto;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .login-btn {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background-color: #004d99;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .login-btn:hover {
+      background-color: #003366;
+    }
+    .open-search-btn {
+      padding: 0.4rem 1rem;
+      background-color: #007acc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+    .open-search-btn:hover,
+    .open-search-btn:focus {
+      background-color: #005a9e;
+      outline: none;
+    }
+    .banner { background: url('assets/banner-image.jpg') no-repeat center center; background-size: 95% auto; padding: 6rem 1rem; text-align: center; position: relative; min-height: 400px; color: white; }
+    .banner-content { max-width: 1200px; margin: 0 auto; background: rgba(0, 0, 0, 0.5); padding: 2rem; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .banner h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .banner p { font-size: 1.2rem; }
+    .note { background: #e8f5e8; padding: 1rem; text-align: center; border-bottom: 2px solid #00a651; }
+    .container { display: flex; max-width: 1200px; margin: 2rem auto; gap: 2rem; }
+    .sidebar { width: 250px; background: white; padding: 1rem; }
+    .sidebar ul { list-style: none; }
+    .sidebar a { display: block; padding: 0.5rem; color: #007acc; text-decoration: none; }
+    .sidebar a:hover { background: #e6f3ff; }
+    main { flex: 1; background: white; padding: 1rem; }
+    .helpline { background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+    .upload-form { background: #f8f9fa; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+    .upload-form h3 { margin-bottom: 0.5rem; }
+    .upload-form p { font-size: 0.9rem; color: #666; margin-bottom: 0.5rem; }
+    #fileInput { margin: 0.5rem 0; padding: 0.25rem; }
+    #uploadBtn { padding: 0.5rem 1rem; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    #uploadBtn:hover { background: #005a9e; }
+    #uploadFeedback { margin-top: 0.5rem; color: #d9534f; }
+    .notification-list { list-style: none; }
+    .notification-list li { padding: 0.75rem; border-bottom: 1px solid #ddd; background: #fff; }
+    .notification-list a { float: right; color: #007acc; text-decoration: none; }
+    .new-item { border-left: 4px solid #00a651; }
+    #latest-news { margin-top: 2rem; }
+    .news-item { background: #f8f9fa; padding: 1rem; border-left: 4px solid #00a651; }
+    .bottom-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; max-width: 1200px; margin: 2rem auto; padding: 1rem; background: #f0f8ff; }
+    .card { text-align: center; padding: 1rem; background: white; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card img { height: 50px; }
+    footer { background: #007acc; color: white; margin-top: 2rem; }
+    .footer-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; padding: 2rem 1rem; }
+    .footer-section h4 { margin-bottom: 1rem; color: #fff; }
+    .footer-section ul { list-style: none; }
+    .footer-section a { color: #e6f3ff; text-decoration: none; }
+    .footer-bottom { background: #005a9e; padding: 1rem; text-align: center; }
+    .footer-nav { display: flex; justify-content: center; list-style: none; margin-bottom: 1rem; flex-wrap: wrap; }
+    .footer-nav li { margin: 0 1rem; }
+    .footer-nav a { color: #fff; text-decoration: none; }
+    @media (max-width: 768px) {
+      .top-bar { flex-direction: column; text-align: center; }
+      nav ul { flex-direction: column; }
+      .container { flex-direction: column; }
+      .banner { min-height: 250px; padding: 4rem 1rem; }
+      .banner-content { padding: 1.5rem; }
+      .banner h2 { font-size: 1.8rem; }
+      .banner p { font-size: 1rem; }
+      .bottom-cards { grid-template-columns: 1fr; }
+      .login-btn-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-left: 0;
+      }
+      .open-search-btn {
+        width: 100%;
+        font-size: 1.1rem;
+      }
+    }
+
+    /* White AI Summary Modal Styles (professional, clean) */
+    .ai-modal {
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 114, 204, 0.15); 
+      z-index: 9999; 
+      align-items: center; 
+      justify-content: center;
+    }
+    .ai-modal-content {
+      background: #fff;
+      color: #234;
+      padding: 2rem 2.5rem;
+      border-radius: 18px;
+      min-width: 370px;
+      max-width: 95vw;
+      margin: auto;
+      box-shadow: 0 8px 30px rgba(0, 60, 100, 0.09), 0 0.5px 1.5px rgba(0, 120, 200, 0.14);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+    .ai-modal-content h2 {
+      color: #007acc;
+      letter-spacing: 0.01em;
+      font-weight: 800;
+      margin-bottom: 1.1rem;
+      text-align: left;
+      font-size: 1.6rem;
+    }
+    #summaryForm label {
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      color: #007acc;
+      font-weight: 700;
+      display: block;
+    }
+    #summaryForm input,
+    #summaryForm select,
+    #summaryForm textarea {
+      width: 100%;
+      margin-top: 0.38rem;
+      border: 1.5px solid #b3e4fc;
+      border-radius: 5px;
+      padding: 0.65rem 0.5rem;
+      font-size: 1rem;
+      background: #f8faff;
+      color: #234;
+      font-family: inherit;
+      margin-bottom: 0.3rem;
+      transition: border 0.2s;
+    }
+    #summaryForm input[readonly] {
+      background: #e6f3fa;
+      color: #378adc;
+      letter-spacing: 0.045em;
+      font-weight: bold;
+    }
+    #summaryForm select:focus,
+    #summaryForm input:focus,
+    #summaryForm textarea:focus {
+      border-color: #007acc;
+      outline: none;
+    }
+    #reviewSummary {
+      min-height: 200px;
+      resize: vertical;
+    }
+    .ai-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .ai-modal-actions button {
+      padding: 0.6rem 1.6rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 5px;
+      border: none;
+      margin-left: 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #cancelModalBtn { background: #ff5767; color: white; }
+    #cancelModalBtn:hover { background: #d4393c; }
+    #saveModalBtn { background: #007acc; color: white; }
+    #saveModalBtn:hover { background: #005a9e;}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <img src="assets/logo.png" alt="KMRL Logo" class="logo" />
+      <h1>കൊച്ചി മെട്രോ റെയിൽ ലിമിറ്റഡ് | Kochi Metro Rail Ltd.</h1>
+      <div class="login-btn-container">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="search_results.html" class="open-search-btn" aria-label="Open Document Search Results">Search Results</a>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#notifications">Doc Notifications</a></li>
+        <li><a href="#forthcoming">Forthcoming Summaries</a></li>
+        <li><a href="#rti">Compliance (RTI)</a></li>
+        <li><a href="#tenders">Alerts</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#quick">Quick Links</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Banner -->
+  <section class="banner" id="home">
+    <div class="banner-content">
+      <h2>Welcome to KMRL Document Intelligence Hub</h2>
+      <p>Streamline your docs with AI summaries. | ഡോക്യുമെന്റ് ബുദ്ധിമുട്ടുകൾ AI സഹായത്തോടെ പരിഹരിക്കുക.</p>
+    </div>
+  </section>
+
+  <!-- Note -->
+  <div class="note">
+    <p>Kindly upload documents strictly as per guidelines. Electronic aids like mobiles are not allowed in processing.</p>
+  </div>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="#vision">Vision & Mission</a></li>
+        <li><a href="#charter">Compliance Charter</a></li>
+        <li><a href="#rti">RTI</a></li>
+        <li><a href="#forms">Download Templates</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Helpline -->
+      <div class="helpline">
+        <h3>Helpline No. 1800-XXX-XXXX</h3>
+        <p>Use this to report doc processing issues or compliance queries.</p>
+      </div>
+
+      <!-- Document Notifications -->
+      <section id="notifications">
+        <h2>Document Notifications</h2>
+        <div class="upload-form">
+          <h3>Upload New Document</h3>
+          <p>Supports PDFs, images, emails (English/Malayalam).</p>
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.png,.txt" />
+          <button id="uploadBtn">Upload</button>
+          <div id="uploadFeedback"></div>
+        </div>
+        <ul class="notification-list" id="notificationList">
+          <li><strong>CEN No.01/2025 - New Safety Bulletin</strong> <a href="#">Click for details</a></li>
+          <li><strong>CEN No.06/2024 - Vendor Invoice Summary</strong> <a href="#">Click for details</a></li>
+          <li><strong>CEN No.02/2025 - Engineering Report</strong> <a href="#">Click for details</a></li>
+        </ul>
+      </section>
+
+      <!-- Latest News -->
+      <section id="latest-news">
+        <h2>Latest Updates</h2>
+        <div class="news-item">
+          <p>CEN 06/2024 Notice on Summary Viewing (from 08-09-2025). <a href="#">Click for details</a></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Bottom Cards -->
+  <section class="bottom-cards">
+    <div class="card">
+      <img src="assets/feedback-icon.png" alt="Feedback" />
+      <h3>FEEDBACK</h3>
+      <p>We will include as many suggestions/feedback as possible in future versions.</p>
+    </div>
+    <div class="card">
+      <img src="assets/rti-icon.png" alt="RTI" />
+      <h3>RIGHT TO INFORMATION</h3>
+      <p>RTI is an Act of Parliament of India to provide the practical regime of right to information for citizens.</p>
+    </div>
+    <div class="card">
+      <img src="assets/news-icon.png" alt="News" />
+      <h3>ALERTS & SUMMARIES</h3>
+      <p>Weekly journal of key doc insights from KMRL operations.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-section">
+        <h4>About Us</h4>
+        <p>KMRL, Kochi, was constituted in 2017 for metro operations and document management.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Alerts</a></li>
+          <li><a href="#">RTI</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Policies</h4>
+        <ul>
+          <li><a href="#">Accessibility Policy</a></li>
+          <li><a href="#">Privacy Policies</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact Us</h4>
+        <p>Office: (0484) 123456</p>
+        <p>Email: info@kmrl.gov.in</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <ul class="footer-nav">
+        <li><a href="#">About the Site</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Feedback</a></li>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Web Policy</a></li>
+        <li><a href="#">Accessibility Statement</a></li>
+        <li><a href="#">Site Map</a></li>
+      </ul>
+      <p>Designed, Developed, Owned, Operated and Maintained by KMRL, Kochi.</p>
+      <p>&copy; Copyright 2025.</p>
+    </div>
+  </footer>
+
+  <!-- AI Summary Modal -->
+  <div id="summaryModal" class="ai-modal">
+    <div class="ai-modal-content">
+      <h2>Document Review</h2>
+      <form id="summaryForm" autocomplete="off">
+        <label for="reviewFileName">Document Name</label>
+        <input type="text" id="reviewFileName" readonly />
+        <label for="reviewCategory">Category</label>
+        <select id="reviewCategory">
+          <option value="HR">HR</option>
+          <option value="Finance">Finance</option>
+          <option value="Legal">Legal</option>
+          <option value="Operations">Operations</option>
+          <option value="General">General</option>
+        </select>
+        <label for="reviewSummary">Summary</label>
+        <textarea id="reviewSummary" rows="10"></textarea>
+        <div class="ai-modal-actions">
+          <button type="button" id="cancelModalBtn">Cancel</button>
+          <button type="submit" id="saveModalBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Role-based UI: hide upload for non-admins
+      const userRole = localStorage.getItem('userRole');
+      if (userRole !== 'admin') {
+        const uploadSection = document.querySelector('.upload-form');
+        if (uploadSection) uploadSection.style.display = 'none';
+      }
+
+      // Language toggle - only if element exists
+      const langSelect = document.getElementById('langSelect');
+      if (langSelect) {
+        langSelect.addEventListener('change', (e) => {
+          if (e.target.value.includes('മലയാളം')) {
+            document.body.classList.add('malayalam');
+          } else {
+            document.body.classList.remove('malayalam');
+          }
+        });
+      }
+
+      // Smooth scroll for nav and sidebar links
+      document.querySelectorAll('nav a, .sidebar a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').substring(1);
+          document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // Upload logic with modal review
+      let selectedFile = null;
+      const uploadBtn = document.getElementById('uploadBtn');
+      const fileInput = document.getElementById('fileInput');
+      const uploadFeedback = document.getElementById('uploadFeedback');
+      const summaryModal = document.getElementById('summaryModal');
+      const reviewFileName = document.getElementById('reviewFileName');
+      const reviewCategory = document.getElementById('reviewCategory');
+      const reviewSummary = document.getElementById('reviewSummary');
+      const saveModalBtn = document.getElementById('saveModalBtn');
+      const cancelModalBtn = document.getElementById('cancelModalBtn');
+      const summaryForm = document.getElementById('summaryForm');
+
+      if (uploadBtn && fileInput && uploadFeedback) {
+        uploadBtn.addEventListener('click', async () => {
+          if (!fileInput.files.length) {
+            uploadFeedback.style.color = '#d9534f';
+            uploadFeedback.textContent = '⚠️ Please choose a file first.';
+            return;
+          }
+          selectedFile = fileInput.files[0];
+
+          const formData = new FormData();
+          formData.append('files', selectedFile);
+
+          uploadFeedback.style.color = '#333';
+          uploadFeedback.textContent = '⏳ Processing document... Please wait.';
+
+          try {
+            const response = await fetch('http://127.0.0.1:5000/api/process', {
+              method: 'POST',
+              body: formData,
+            });
+            if (!response.ok) throw new Error('Failed to process document');
+            const result = await response.json();
+            // Fill modal fields
+            reviewFileName.value = selectedFile.name;
+            reviewCategory.value = result.category || "General";
+            reviewSummary.value = result.summary || '';
+            summaryModal.style.display = 'flex';
+            uploadFeedback.textContent = '';
+          } catch (err) {
+            uploadFeedback.style.color = '#d9534f';
+            uploadFeedback.textContent = '❌ Error: ' + err.message;
+          }
+        });
+      }
+
+      cancelModalBtn.addEventListener('click', () => {
+        summaryModal.style.display = 'none';
+        uploadFeedback.textContent = '❌ Upload canceled.';
+      });
+
+      summaryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!selectedFile) return;
+        const formData = new FormData();
+        formData.append('files', selectedFile);
+        formData.append('summary', reviewSummary.value);
+        formData.append('category', reviewCategory.value);
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/save', {
+            method: 'POST',
+            body: formData,
+          });
+          if (!response.ok) throw new Error('Failed to save file and summary');
+          summaryModal.style.display = 'none';
+          uploadFeedback.style.color = '#28a745';
+          uploadFeedback.textContent = '✅ File and summary saved successfully!';
+          fileInput.value = '';
+        } catch (err) {
+          uploadFeedback.style.color = '#d9534f';
+          uploadFeedback.textContent = '❌ Error saving: ' + err.message;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

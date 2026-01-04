@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KMRL Document Intelligence Hub | Search Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, sans-serif; 
+      background: #f5f7fa; 
+      color: #333; 
+      line-height: 1.6; 
+    }
+    .malayalam { font-family: 'Noto Sans Malayalam', sans-serif; }
+
+    /* Header Styles */
+    header { background: #007acc; color: white; }
+    .top-bar { 
+      display: flex; 
+      align-items: center; 
+      padding: 0.5rem 1rem; 
+    }
+    .logo { height: 50px; }
+    .top-bar h1 { 
+      flex: 1; 
+      text-align: center; 
+      margin: 0 1rem; 
+      font-size: 1.5rem;
+    }
+    .login-btn-container { margin-left: auto; }
+    .login-btn {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background-color: #004d99;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .login-btn:hover { background-color: #003366; }
+
+    /* Navigation */
+    nav ul { 
+      display: flex; 
+      list-style: none; 
+      justify-content: center; 
+      background: #005a9e; 
+      padding: 0.5rem 0; 
+      flex-wrap: wrap;
+    }
+    nav li { margin: 0 1rem; }
+    nav a { 
+      color: white; 
+      text-decoration: none; 
+      padding: 0.5rem; 
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    nav a:hover { background: rgba(255,255,255,0.1); }
+    nav a.active {
+      background: rgba(255,255,255,0.2);
+      font-weight: bold;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      color: #007acc;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-section {
+      background: #1a365d;
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .total-statements {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .statement-count {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #68d391;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .show-entries {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .show-entries select {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .search-box input {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 200px;
+    }
+
+    /* Table Styles */
+    .table-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f7fafc;
+      font-weight: 600;
+      color: #2d3748;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    tr:hover {
+      background: #f7fafc;
+    }
+
+    .sno-col { width: 60px; text-align: center; }
+    .filename-col { width: 200px; }
+    .summary-col { width: 300px; }
+    .category-col { width: 120px; }
+    .date-col { width: 150px; }
+    .action-col { width: 100px; text-align: center; }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .category-finance {
+      background: #e6fffa;
+      color: #047857;
+    }
+
+    .category-hr {
+      background: #fef7e6;
+      color: #b45309;
+    }
+
+    .category-general {
+      background: #f0f9ff;
+      color: #0369a1;
+    }
+
+    .edit-btn {
+      background: #007acc;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background: #005a9e;
+    }
+
+    .summary-text {
+      max-height: 80px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* Loading and Empty States */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    /* Edit Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 1rem;
+      color: #007acc;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn-cancel {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-cancel:hover { background: #4b5563; }
+    .btn-save:hover { background: #047857; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .top-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      nav ul {
+        flex-direction: column;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-box input {
+        width: 100%;
+      }
+      
+      table {
+        font-size: 0.9rem;
+      }
+      
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+      
+      .summary-col,
+      .filename-col {
+        width: auto;
+        min-width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <img src="assets/logo.png" alt="KMRL Logo" class="logo" />
+      <h1>കൊച്ചി മെട്രോ റെയിൽ ലിമിറ്റഡ് | Kochi Metro Rail Ltd.</h1>
+      <div class="login-btn-container">
+        <a href="login.html" class="login-btn">Login</a>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index1.html">Home</a></li>
+        <li><a href="#notifications">Doc Notifications</a></li>
+        <li><a href="#forthcoming">Forthcoming Summaries</a></li>
+        <li><a href="#results" class="active">Search Results</a></li>
+        <li><a href="#rti">Compliance (RTI)</a></li>
+        <li><a href="#tenders">Alerts</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#quick">Quick Links</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Document Search Results</h1>
+      <p>Browse and search through all processed documents with AI-generated summaries</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="total-statements">SEARCH RESULTS</div>
+      <div class="statement-count" id="totalCount">0</div>
+      <small>Documents found as per search criteria</small>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="show-entries">
+        <label for="entriesSelect">Show</label>
+        <select id="entriesSelect">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span>entries</span>
+      </div>
+      
+      <div class="search-box">
+        <label for="searchInput">Search:</label>
+        <input type="text" id="searchInput" placeholder="Search documents..." />
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table id="filesTable">
+        <thead>
+          <tr>
+            <th class="sno-col">S.No</th>
+            <th class="filename-col">File Name</th>
+            <th class="summary-col">Summary</th>
+            <th class="category-col">Category</th>
+            <th class="date-col">Last Modified</th>
+            <th class="action-col">Edit</th>
+          </tr>
+        </thead>
+        <tbody id="filesTableBody">
+          <tr>
+            <td colspan="6" class="loading">Loading documents...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Document Details</h3>
+      <form id="editForm">
+        <div class="form-group">
+          <label for="editFilename">File Name</label>
+          <input type="text" id="editFilename" readonly />
+        </div>
+        <div class="form-group">
+          <label for="editCategory">Category</label>
+          <select id="editCategory">
+            <option value="general">General</option>
+            <option value="finance">Finance</option>
+            <option value="hr">HR</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editSummary">Summary</label>
+          <textarea id="editSummary" placeholder="Enter document summary..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let filesData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFiles();
+      setupEventListeners();
+    });
+
+    function setupEventListeners() {
+      // Search functionality
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+      
+      // Entries per page
+      document.getElementById('entriesSelect').addEventListener('change', handleEntriesChange);
+      
+      // Edit form submission
+      document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
+    }
+
+    async function loadFiles() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/files');
+        if (!response.ok) throw new Error('Failed to fetch files');
+        
+        filesData = await response.json();
+        filteredData = [...filesData];
+        
+        updateTotalCount();
+        renderTable();
+      } catch (error) {
+        console.error('Error loading files:', error);
+        document.getElementById('filesTableBody').innerHTML = `
+          <tr><td colspan="6" class="empty-state">Error loading documents. Please try again.</td></tr>
+        `;
+      }
+    }
+
+    function updateTotalCount() {
+      document.getElementById('totalCount').textContent = filesData.length;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('filesTableBody');
+      
+      if (filteredData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No documents found.</td></tr>';
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageData = filteredData.slice(startIndex, endIndex);
+
+      tbody.innerHTML = pageData.map((file, index) => `
+        <tr>
+          <td class="sno-col">${startIndex + index + 1}</td>
+          <td class="filename-col">
+            <strong>${file.filename}</strong>
+          </td>
+          <td class="summary-col">
+            <div class="summary-text">${file.summary || 'No summary available'}</div>
+          </td>
+          <td class="category-col">
+            <span class="category-badge ${getCategoryClass(file.category || 'general')}">
+              ${(file.category || 'general').toUpperCase()}
+            </span>
+          </td>
+          <td class="date-col">${formatDate(file.upload_time)}</td>
+          <td class="action-col">
+            <button class="edit-btn" onclick="openEditModal(${file.id})">Edit</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function getCategoryClass(category) {
+      const categories = {
+        'finance': 'category-finance',
+        'hr': 'category-hr',
+        'general': 'category-general'
+      };
+      return categories[category.toLowerCase()] || 'category-general';
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function handleSearch(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      filteredData = filesData.filter(file => 
+        file.filename.toLowerCase().includes(searchTerm) ||
+        (file.summary && file.summary.toLowerCase().includes(searchTerm)) ||
+        (file.category && file.category.toLowerCase().includes(searchTerm))
+      );
+      currentPage = 1;
+      renderTable();
+    }
+
+    function handleEntriesChange(e) {
+      itemsPerPage = parseInt(e.target.value);
+      currentPage = 1;
+      renderTable();
+    }
+
+    function openEditModal(fileId) {
+      const file = filesData.find(f => f.id === fileId);
+      if (!file) return;
+
+      document.getElementById('editFilename').value = file.filename;
+      document.getElementById('editCategory').value = file.category || 'general';
+      document.getElementById('editSummary').value = file.summary || '';
+      
+      // Store the file ID for later use
+      document.getElementById('editForm').dataset.fileId = fileId;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    async function handleEditSubmit(e) {
+      e.preventDefault();
+      
+      const fileId = e.target.dataset.fileId;
+      const category = document.getElementById('editCategory').value;
+      const summary = document.getElementById('editSummary').value;
+
+      try {
+        // Note: You'll need to implement an update endpoint in your Flask app
+        // For now, we'll just update the local data
+        const fileIndex = filesData.findIndex(f => f.id == fileId);
+        if (fileIndex !== -1) {
+          filesData[fileIndex].category = category;
+          filesData[fileIndex].summary = summary;
+          filteredData = [...filesData]; // Update filtered data too
+          renderTable();
+          closeEditModal();
+          
+          // Show success message
+          alert('Document updated successfully!');
+        }
+      } catch (error) {
+        console.error('Error updating file:', error);
+        alert('Error updating document. Please try again.');
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('editModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        closeEditModal();
+      }
+    });
+  </script>
+</body>
+</html>
